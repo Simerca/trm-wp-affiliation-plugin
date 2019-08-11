@@ -122,41 +122,36 @@ function display_extra_fields_after_billing_address () {
 
 function debugMyPlugin(){
 
-				$terms = get_terms(  'product_cat', 80 );
+	$args = array(
+		'post_type' => 'campagne_affiliation',
+		'meta_query' => array(
+			'relation'=>'AND',
+			array(
+				'key' => 'cashback',
+				'value' => 71,
+				'compare' => 'LIKE',
+			),
+			array(
+				'key'=>'date_start',
+				'value'=>date('Y-m-d',time()),
+				'compare'=>'<=',
+				'type'=>'DATE'
+			),
+			array(
+				'key'=>'date_end',
+				'value'=>date('Y-m-d',time()),
+				'compare'=>'>=',
+				'type'=>'DATE'
+			)
+		)
+	);
+	$campagnes = get_posts($args);
 
-				$formatedTerms = array();
+	// echo "<pre>";
+	// var_dump($campagnes);
+	// echo "</pre>";
 
-				$metaQuerys = array();
-				foreach($terms as $term){
-
-					$formatedTerms[] = $term->term_taxonomy_id;
-
-					$metaQuery = array(
-						'key'=>'groupe_de_produit',
-						'value'=> intval( $term->term_taxonomy_id ) ,
-						'compare'=>'LIKE'
-					);
-
-					$metaQuerys = $metaQuery;
-
-				}
-
-				$args = array(
-					'post_type' => 'cashback',
-					'meta_query' => array(
-						'relation' => 'OR',
-						$metaQuerys
-					)
-				);
-				$cashbacks = get_posts($args);
-				if(!is_admin()){
-
-					echo "<pre>";
-					var_dump($cashbacks);
-					echo "</pre>";
-				}
-
-			}
+}
 
 add_action( 'woocommerce_checkout_update_order_meta', 'add_order_delivery_date_to_order' , 10, 1);
 function add_order_delivery_date_to_order ( $order_id ) {
@@ -262,15 +257,28 @@ function add_order_delivery_date_to_order ( $order_id ) {
 					$args = array(
 						'post_type' => 'campagne_affiliation',
 						'meta_query' => array(
-							'meta_key' => 'cashback',
-							'meta_value' => $cashback->ID,
-							'compare' => 'LIKE',
+							'relation'=>'AND',
+							array(
+								'key' => 'cashback',
+								'value' => $cashback->ID,
+								'compare' => 'LIKE',
+							),
+							array(
+								'key'=>'date_start',
+								'value'=>date('Y-m-d',time()),
+								'compare'=>'<=',
+								'type'=>'DATE'
+							),
+							array(
+								'key'=>'date_end',
+								'value'=>date('Y-m-d',time()),
+								'compare'=>'>=',
+								'type'=>'DATE'
+							)
 						)
 					);
 					$campagnes = get_posts($args);
-					echo "<pre>";
-					var_dump($campagnes);
-					echo "</pre>";
+					
 					if($campagnes){
 						
 						foreach($campagnes as $campagne){
@@ -284,25 +292,26 @@ function add_order_delivery_date_to_order ( $order_id ) {
 			}
 
 		}
-		
-		// Create post object
-		$my_post = array(
-			'post_title'    => wp_strip_all_tags( date('d-m-Y H:i').' #'.$order_id ),
-			'post_content'  => '',
-			'post_status'   => 'publish',
-			'post_author'   => 1,
-			'post_type' => 'commande_affilie',
-			'meta_input'=>array(
-				'utilisateur'=>$current_user,
-				'campagne_daffiliation'=>$campagnesAffiliation,
-				'partenaire'=>$affiliateur->ID,
-				'commande'=>$order_id,
-				'montant_affiliation'=>$totalAffiliation
-			)
-		);
-		
-		// Insert the post into the database
-		wp_insert_post( $my_post );
+		if(count($campagnesAffiliation) != 0){
+			// Create post object
+			$my_post = array(
+				'post_title'    => wp_strip_all_tags( date('d-m-Y H:i').' #'.$order_id ),
+				'post_content'  => '',
+				'post_status'   => 'publish',
+				'post_author'   => 1,
+				'post_type' => 'commande_affilie',
+				'meta_input'=>array(
+					'utilisateur'=>$current_user,
+					'campagne_daffiliation'=>$campagnesAffiliation,
+					'partenaire'=>$affiliateur->ID,
+					'commande'=>$order_id,
+					'montant_affiliation'=>$totalAffiliation
+				)
+			);
+			
+			// Insert the post into the database
+			wp_insert_post( $my_post );
+		}
 	}
 }
 
