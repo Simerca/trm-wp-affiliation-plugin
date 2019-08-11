@@ -48,6 +48,14 @@ Custom Post Type UI
 Via le fichier cpt-ui-param.json
 ```
 
+```
+User Role Editor
+Créer un role avec les param suivants:
+
+id : partenaires
+Nom : Partenaire
+```
+
 ## Running the tests
 
 Pour tester, rendez vous dans l'administration WordPress
