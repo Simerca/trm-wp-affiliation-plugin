@@ -70,11 +70,7 @@ Retrouvez les resultat de l'affiliation dans l'onglet Resultat Affiliation sur W
 
 ## Authors
 
-* **Ayrton LECOUTRE** - *Initial work* - [PurpleBooth](https://github.com/Simerca)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+* **Ayrton LECOUTRE** - *Initial work* - [Simerca](https://github.com/Simerca)
 
 ## Acknowledgments
 
