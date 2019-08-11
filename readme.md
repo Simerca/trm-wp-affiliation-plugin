@@ -4,7 +4,7 @@ Un plugin d'affiliation pour TRM
 
 ## Getting Started
 
-Ce module à été developper pour la société TRM par Ayrton LECOUTRE de la SARL WEEBEDIA. Pour toutes question vous pouvez envoyez un mail à contact@weebedia.com ou ayrtonpgt@gmail.com
+Ce module à été developper pour la société TRM par Ayrton LECOUTRE de la SARL WEEBEDIA. Pour toutes questions vous pouvez envoyez un mail à contact@weebedia.com ou ayrtonpgt@gmail.com
 
 ### Prerequisites
 
@@ -53,11 +53,11 @@ Créer un produit WooCommerce
 ```
 
 ```
-Crée un nouveau Cashback pour le produit
+Créer un nouveau Cashback pour le produit
 ```
 
 ```
-Crée une nouvelle Campagne d'affiliation avec le Cashback précedent
+Créer une nouvelle Campagne d'affiliation avec le Cashback précedent
 ```
 
 ```
