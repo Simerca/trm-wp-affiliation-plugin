@@ -28,6 +28,10 @@ Installer tout les plugins requis
 Vous pouvez ajouter des extensions sur WordPress en Administrateur dans l'outil Extensions/Ajouter
 ```
 
+```
+Le plugin de TRM est dans l'archive trm-wp-affiliation.zip de ce dossier
+```
+
 Importer les parametres des plugins suivant :
 ```
 Advanced Custom Fields
