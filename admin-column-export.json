@@ -1,0 +1,89 @@
+{
+    "commande_affilie": [
+        {
+            "columns": {
+                "title": {
+                    "type": "title",
+                    "label": "Titre",
+                    "width": "",
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "name": "title",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "5d50662e5f582": {
+                    "type": "column-acf_field",
+                    "label": "Montant",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d506340f28b0",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "name": "5d50662e5f582",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "5d50662e60405": {
+                    "type": "column-acf_field",
+                    "label": "Partenaire",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d47d96e374e5",
+                    "display_author_as": "display_name",
+                    "user_link_to": "edit_user",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "on",
+                    "filter_label": "",
+                    "name": "5d50662e60405",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "5d506b96ca940": {
+                    "type": "column-acf_field",
+                    "label": "Commande",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d47d99c374e7",
+                    "post_property_display": "title",
+                    "post_link_to": "edit_post",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "name": "5d506b96ca940",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "date": {
+                    "type": "date",
+                    "label": "Date",
+                    "width": "",
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "on",
+                    "filter_label": "",
+                    "filter_format": "monthly",
+                    "name": "date",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,372 @@
+[
+    {
+        "key": "group_5d36a905dbfa9",
+        "title": "Campagne affiliation",
+        "fields": [
+            {
+                "key": "field_5d36a9bac62b5",
+                "label": "Utilisateur affilié",
+                "name": "utilisateur_affilie",
+                "type": "user",
+                "instructions": "Laissez vide pour tout les utilisateurs partenaires",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "role": "",
+                "allow_null": 0,
+                "multiple": 1,
+                "return_format": "id"
+            },
+            {
+                "key": "field_5d36aa32e5c93",
+                "label": "Cashback",
+                "name": "cashback",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "cashback"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "elements": "",
+                "min": "",
+                "max": "",
+                "return_format": "object"
+            },
+            {
+                "key": "field_5d40059d7db43",
+                "label": "Du",
+                "name": "date_start",
+                "type": "date_time_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y g:i a",
+                "return_format": "d\/m\/Y g:i a",
+                "first_day": 1
+            },
+            {
+                "key": "field_5d4005ad7db45",
+                "label": "Au",
+                "name": "date_end",
+                "type": "date_time_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y g:i a",
+                "return_format": "d\/m\/Y g:i a",
+                "first_day": 1
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "campagne_affiliation"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_5d400791906ea",
+        "title": "Cashback",
+        "fields": [
+            {
+                "key": "field_5d47dd8472df3",
+                "label": "Selection_type",
+                "name": "selection_type",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "produit": "produit",
+                    "groupe de produit": "groupe de produit"
+                },
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "return_format": "value",
+                "ajax": 0,
+                "placeholder": ""
+            },
+            {
+                "key": "field_5d4007bba2f94",
+                "label": "Groupe de produit",
+                "name": "groupe_de_produit",
+                "type": "taxonomy",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_5d47dd8472df3",
+                            "operator": "==contains",
+                            "value": "groupe de produit"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "taxonomy": "product_cat",
+                "field_type": "checkbox",
+                "add_term": 0,
+                "save_terms": 0,
+                "load_terms": 0,
+                "return_format": "id",
+                "multiple": 0,
+                "allow_null": 0
+            },
+            {
+                "key": "field_5d47dd369e0fe",
+                "label": "Produit",
+                "name": "produit",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_5d47dd8472df3",
+                            "operator": "==",
+                            "value": "produit"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "product"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "elements": "",
+                "min": "",
+                "max": "",
+                "return_format": "object"
+            },
+            {
+                "key": "field_5d400acf15587",
+                "label": "Cashback",
+                "name": "cashback",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "%",
+                "min": "",
+                "max": "",
+                "step": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "cashback"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_5d47d94fe7701",
+        "title": "Resultat Affiliation",
+        "fields": [
+            {
+                "key": "field_5d47d959374e4",
+                "label": "Utilisateur",
+                "name": "utilisateur",
+                "type": "user",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "role": "",
+                "allow_null": 0,
+                "multiple": 0,
+                "return_format": "array"
+            },
+            {
+                "key": "field_5d47d96e374e5",
+                "label": "Partenaire",
+                "name": "partenaire",
+                "type": "user",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "role": "",
+                "allow_null": 0,
+                "multiple": 0,
+                "return_format": "array"
+            },
+            {
+                "key": "field_5d47d97f374e6",
+                "label": "Campagne d'affiliation",
+                "name": "campagne_daffiliation",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "campagne_affiliation"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "elements": "",
+                "min": "",
+                "max": "",
+                "return_format": "object"
+            },
+            {
+                "key": "field_5d47d99c374e7",
+                "label": "Commande",
+                "name": "commande",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "shop_order"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "elements": "",
+                "min": "",
+                "max": "",
+                "return_format": "object"
+            },
+            {
+                "key": "field_5d506340f28b0",
+                "label": "Montant affiliation",
+                "name": "montant_affiliation",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "€",
+                "min": "",
+                "max": "",
+                "step": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "commande_affilie"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    }
+]
