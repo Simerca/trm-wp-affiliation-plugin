@@ -63,6 +63,17 @@ Un utilisateur commande un produit qui à une campagne d'affiliation active avec
 1 - Le dernier cashback en date est pris en compte
 2 - La hierarchie la plus basse est pris en compte ( Categorie < Produits )
 
+### Shortcode
+
+Pour ajouté l'onglet de dashboard
+```
+[trm_front_dashboard] 
+```
+
+La page WishList
+```
+[trm_wishlist_affiliation]
+```
 
 ## Running the tests
 
