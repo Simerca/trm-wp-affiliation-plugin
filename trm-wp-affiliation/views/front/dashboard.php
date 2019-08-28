@@ -12,11 +12,10 @@
         
             <thead>
                 <th>ID</th>
-                <th>Nom de la campagne</th>
+                <th>Commande</th>
                 <th>Gain</th>
-                <th>Nombre d'utilisateur touché</th>
-                <th>Du</th>
-                <th>Au</th>
+                <th>Payé ?</th>
+                <th>Date</th>
             </thead>
 
             <tbody>
@@ -24,24 +23,34 @@
 
                 
                 $args = array(
-                    'post_type'=>'campagne_affiliation',
-                    'post_author'=>get_current_user_id()
+                    'post_type'=>'commande_affilie',
+                    'meta_query'=>array(
+                        array(
+                            'key'=>'partenaire',
+                            'value'=>get_current_user_id()
+                        )
+                    )
                 );
                 $userCampagnes = get_posts($args);
-                var_dump($userCampagnes);
+
                 foreach($userCampagnes as $userCampagne){
 
-                    $fields = get_fields($userCampagne->ID);
-                    echo "<pre>";
-                    var_dump($fields);
-                    echo "</pre>";
+                    $fields = get_post_meta($userCampagne->ID);
+
                     $html = '<tr>';
                     $html .= '<td>'.$userCampagne->ID.'</td>';
                     $html .= '<td>'.$userCampagne->post_title.'</td>';
-                    $html .= '<td></td>';
-                    $html .= '<td>'.count($fields['utilisateur_affilie']).'</td>';
-                    $html .= '<td>'.$fields['date_start'].'</td>';
-                    $html .= '<td>'.$fields['date_end'].'</td>';
+                    $html .= '<td>'.$fields['montant_affiliation'][0].' €</td>';
+                    if(isset($fields['affiliation_paye'])){
+                        if($fields['affiliation_paye'] == 1){
+                            $html .= '<td><i class="text-success">Payé</i></td>';
+                        }else{
+                            $html .= '<td><i>Non payé</i></td>';
+                        }
+                    }else{
+                        $html .= '<td></td>';
+                    }
+                    $html .= '<td>'.$userCampagne->post_date.'</td>';
                     $html .= '</tr>';
                     echo $html;
 

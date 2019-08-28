@@ -8,7 +8,7 @@
                 "label": "Utilisateur affilié",
                 "name": "utilisateur_affilie",
                 "type": "user",
-                "instructions": "Laissez vide pour tout les utilisateurs partenaires",
+                "instructions": "Laissez vide pour tous les utilisateurs partenaires",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -349,6 +349,25 @@
                 "min": "",
                 "max": "",
                 "step": ""
+            },
+            {
+                "key": "field_5d508ad14c3a9",
+                "label": "Payé ?",
+                "name": "affiliation_paye",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
             }
         ],
         "location": [
@@ -357,6 +376,76 @@
                     "param": "post_type",
                     "operator": "==",
                     "value": "commande_affilie"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_5d6625d04db35",
+        "title": "Wishlist",
+        "fields": [
+            {
+                "key": "field_5d6625ffed43f",
+                "label": "Utilisateur",
+                "name": "utilisateur_wishlist",
+                "type": "user",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "role": "",
+                "allow_null": 0,
+                "multiple": 0,
+                "return_format": "id"
+            },
+            {
+                "key": "field_5d6625d8448ad",
+                "label": "Produits",
+                "name": "produits",
+                "type": "relationship",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "product"
+                ],
+                "taxonomy": "",
+                "filters": [
+                    "search",
+                    "post_type",
+                    "taxonomy"
+                ],
+                "elements": [
+                    "featured_image"
+                ],
+                "min": "",
+                "max": "",
+                "return_format": "id"
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "wishlist"
                 }
             ]
         ],

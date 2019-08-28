@@ -90,6 +90,13 @@ if(isset($_GET['affiliate'])){
 
 }
 
+if(isset($_GET['wishlist'])){
+
+	$id = $_GET['wishlist'];
+	// addToWishList($id);
+
+}
+
 if(isset($_SESSION['affiliate'])){
 
 	// var_dump($_SESSION['affiliate']);
@@ -102,6 +109,7 @@ function add_content_after_addtocart_button_func(){
 		$user = wp_get_current_user();
 		$roles = ( array ) $user->roles;
 		if(in_array('partenaires', $roles) || in_array('administrator', $roles)){
+			include plugin_dir_path( __FILE__ ) . 'views/front/button-wishlist.php';
 			include plugin_dir_path( __FILE__ ) . 'views/front/button-affiliation.php';
 		}
 	}
@@ -117,8 +125,141 @@ function display_extra_fields_after_billing_address () {
 	//}
 }
 
+function addToWishList(){
 
-// add_action('init', 'debugMyPlugin');
+	if(isset($_GET['m_wishlist'])){
+
+	$id = $_GET['m_wishlist'];
+
+	$args = array(
+		'post_type'=>'wishlist',
+		'meta_query'=>array(
+			array(
+				'key'=>'utilisateur_wishlist',
+				'value'=>get_current_user_id()
+			)
+		)
+	);
+
+	$wishlists = get_posts($args);
+	
+	if($wishlists){
+
+		foreach($wishlists as $wishlist){
+			
+
+			$fields = get_fields($wishlist->ID);
+			
+
+			// echo "<pre>";
+			// var_dump($wishlist->ID);
+			// var_dump($fields);
+			// echo "</pre>";
+
+			$itemExist = false;
+			if(isset($fields['produits']) && is_array($fields['produits'])){
+			foreach($fields['produits'] as $product){
+
+				// echo "<pre>";
+				// var_dump($product);
+				// var_dump($id);
+				// echo "</pre>";
+				if($id == $product){
+
+					$itemExist = true;
+
+				}
+
+			}
+			}	
+			if(!$itemExist){
+				
+				// echo "<pre>";
+				// var_dump($itemExist);
+				add_row('produits', $id, $wishlist->ID);
+				// echo "</pre>";
+
+			}
+
+		}
+
+	}else{
+
+		$my_post = array(
+			'post_title'    => wp_strip_all_tags( date('d-m-Y H:i'). '#'. get_current_user_id() ) ,
+			'post_content'  => '',
+			'post_status'   => 'publish',
+			'post_author'   => 1,
+			'post_type' => 'wishlist'
+		);
+		
+		// Insert the post into the database
+		$post = wp_insert_post( $my_post );
+
+		update_field('produits', $id, $post);
+		update_field('utilisateur_wishlist', get_current_user_id(), $post);
+
+
+	}
+
+	}
+
+}
+
+function delToWishList(){
+
+	if(isset($_GET['delwishlist'])){
+
+	$id = $_GET['delwishlist'];
+
+	$args = array(
+		'post_type'=>'wishlist',
+		'meta_query'=>array(
+			array(
+				'key'=>'utilisateur_wishlist',
+				'value'=>get_current_user_id()
+			)
+		)
+	);
+
+	$wishlists = get_posts($args);
+
+	foreach($wishlists as $wishlist){
+		
+
+		$fields = get_fields($wishlist->ID);
+
+		// echo "<pre>";
+		// var_dump($wishlist->ID);
+		// var_dump($fields);
+		// echo "</pre>";
+
+		$itemExist = false;
+		foreach($fields as $product){
+
+
+			if($id == $product[0]){
+
+				$itemExist = true;
+				// echo "<pre>";
+				// var_dump($itemExist);
+				// var_dump($id);
+				// var_dump($wishlist->ID);
+				// var_dump(delete_row('produits', 80, 178));
+				// echo "</pre>";
+
+			}
+
+		}
+
+	}
+
+	}
+
+}
+
+add_action('init', 'addToWishList');
+add_action('init', 'delToWishList');
 
 function debugMyPlugin(){
 
@@ -228,9 +369,9 @@ function add_order_delivery_date_to_order ( $order_id ) {
 				$cashbacks = get_posts($args);
 				if(!is_admin()){
 
-					echo "<pre>";
-					var_dump($cashbacks);
-					echo "</pre>";
+					// echo "<pre>";
+					// var_dump($cashbacks);
+					// echo "</pre>";
 				}
 
 			}

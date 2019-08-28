@@ -56,6 +56,14 @@ id : partenaires
 Nom : Partenaire
 ```
 
+### Comportement
+
+Un utilisateur commande un produit qui à une campagne d'affiliation active avec 2 cashback actif.
+
+1 - Le dernier cashback en date est pris en compte
+2 - La hierarchie la plus basse est pris en compte ( Categorie < Produits )
+
+
 ## Running the tests
 
 Pour tester, rendez vous dans l'administration WordPress

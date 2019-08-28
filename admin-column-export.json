@@ -1,4 +1,70 @@
 {
+    "campagne_affiliation": [
+        {
+            "columns": {
+                "title": {
+                    "type": "title",
+                    "label": "Titre",
+                    "width": "",
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "name": "title",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "author": {
+                    "type": "author",
+                    "label": "Auteur",
+                    "width": 10,
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "name": "author",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "date": {
+                    "type": "date",
+                    "label": "Date",
+                    "width": "",
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "filter_format": "",
+                    "name": "date",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "5d6532a7ef63c": {
+                    "type": "column-acf_field",
+                    "label": "Utilisateur affili\u00e9",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d36a9bac62b5",
+                    "display_author_as": "display_name",
+                    "user_link_to": "edit_user",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "name": "5d6532a7ef63c",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                }
+            }
+        }
+    ],
     "commande_affilie": [
         {
             "columns": {
@@ -77,6 +143,62 @@
                     "filter": "on",
                     "filter_label": "",
                     "filter_format": "monthly",
+                    "name": "date",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "5d508b094ff35": {
+                    "type": "column-acf_field",
+                    "label": "Pay\u00e9 ?",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d508ad14c3a9",
+                    "edit": "on",
+                    "sort": "on",
+                    "filter": "on",
+                    "filter_label": "",
+                    "name": "5d508b094ff35",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                }
+            }
+        }
+    ],
+    "wishlist": [
+        {
+            "columns": {
+                "5d66265b43b00": {
+                    "type": "column-acf_field",
+                    "label": "Utilisateur",
+                    "width": "",
+                    "width_unit": "%",
+                    "field": "field_5d6625ffed43f",
+                    "display_author_as": "display_name",
+                    "user_link_to": "edit_user",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "name": "5d66265b43b00",
+                    "label_type": null,
+                    "bulk-editing": null,
+                    "export": null,
+                    "search": null
+                },
+                "date": {
+                    "type": "date",
+                    "label": "Date",
+                    "width": "",
+                    "width_unit": "%",
+                    "edit": "off",
+                    "sort": "on",
+                    "filter": "off",
+                    "filter_label": "",
+                    "filter_format": "",
                     "name": "date",
                     "label_type": null,
                     "bulk-editing": null,
