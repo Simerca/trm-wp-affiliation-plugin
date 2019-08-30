@@ -5,16 +5,45 @@
         <div class="grille">
 
             <?php 
+
+            if(!isset($_GET['w_user'])){
+
+                if(is_user_logged_in()){
+                    echo '<div class="colonne-12">';
+                    echo '<h3>Lien vers ma wishlist</h3>';
+                    echo '<code>'.home_url().'/wishlist/?w_user='.get_current_user_id().'&affiliate='.get_current_user_id().'</code>';
+                    echo '</div>';
+                }
+
+            }
             
-            $args = array(
-                'post_type'=>'wishlist',
-                'meta_query'=>array(
-                    array(
-                        'key'=>'utilisateur_wishlist',
-                        'value'=>get_current_user_id()
+            if(isset($_GET['w_user'])){
+
+                $user = get_user_by('id',$_GET['w_user']);
+
+                echo "Wishlist de ".$user->display_name;
+
+                $args = array(
+                    'post_type'=>'wishlist',
+                    'meta_query'=>array(
+                        array(
+                            'key'=>'utilisateur_wishlist',
+                            'value'=>$_GET['w_user']
+                        )
                     )
-                )
-            );
+                );
+            }else{
+                $args = array(
+                    'post_type'=>'wishlist',
+                    'meta_query'=>array(
+                        array(
+                            'key'=>'utilisateur_wishlist',
+                            'value'=>get_current_user_id()
+                        )
+                    )
+                );
+            }
+
 
             $wishlist = get_posts($args);
 
