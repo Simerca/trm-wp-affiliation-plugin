@@ -11,7 +11,7 @@
                 if(is_user_logged_in()){
                     echo '<div class="colonne-12">';
                     echo '<h3>Lien vers ma wishlist</h3>';
-                    echo '<code>'.home_url().'/wishlist/?w_user='.get_current_user_id().'&affiliate='.get_current_user_id().'</code>';
+                    echo '<code>'.home_url().'/wishlist-partenaire/?w_user='.get_current_user_id().'&affiliate='.get_current_user_id().'</code>';
                     echo '</div>';
                 }
 
@@ -84,9 +84,9 @@
                             <!-- The text field -->
 
                             <div class="colonne-5 my-2 float-right">
-                            <label id="zoneAlert<?php echo $product->ID ?>"></label><br>
+                            <label id="zoneAlert<?php echo $product->ID ?>"></label>
                             
-                            <input type="text" value="<?php echo $current_url.'?affiliate='.get_current_user_id(); ?>" class="input" id="<?php echo $product->ID ?>"><br>
+                            <input type="text" value="<?php echo $current_url.'?affiliate='.get_current_user_id(); ?>" class="input" id="<?php echo $product->ID ?>">
 
                             <!-- The button used to copy the text -->
                             <button type="button" class="button" onclick="myFunction(<?php echo $product->ID ?>)">Copier le lien d'affiliation</button>

@@ -260,38 +260,27 @@ function delToWishList(){
 
 add_action('init', 'addToWishList');
 add_action('init', 'delToWishList');
+add_action('init', 'debugMyPlugin');
 
 function debugMyPlugin(){
 
+	if(isset($_GET['debug'])){
+
+		$item_id = 125951;
+
 	$args = array(
-		'post_type' => 'campagne_affiliation',
+		'post_type' => 'cashback',
 		'meta_query' => array(
-			'relation'=>'AND',
 			array(
-				'key' => 'cashback',
-				'value' => 71,
-				'compare' => 'LIKE',
-			),
-			array(
-				'key'=>'date_start',
-				'value'=>date('Y-m-d',time()),
-				'compare'=>'<=',
-				'type'=>'DATE'
-			),
-			array(
-				'key'=>'date_end',
-				'value'=>date('Y-m-d',time()),
-				'compare'=>'>=',
-				'type'=>'DATE'
+			'key' => 'produit',
+			'value' => $item_id,
+			'compare' => 'LIKE',
 			)
 		)
 	);
-	$campagnes = get_posts($args);
-
-	// echo "<pre>";
-	// var_dump($campagnes);
-	// echo "</pre>";
-
+	$cashbacks = get_posts($args);
+	var_dump($cashbacks);
+	}
 }
 
 add_action( 'woocommerce_checkout_update_order_meta', 'add_order_delivery_date_to_order' , 10, 1);
@@ -328,6 +317,8 @@ function add_order_delivery_date_to_order ( $order_id ) {
 
 			$args = array(
 				'post_type' => 'cashback',
+				'orderby'          => 'ID',
+				'order'            => 'DESC',
 				'meta_query' => array(
 					array(
 					'key' => 'produit',
@@ -338,97 +329,149 @@ function add_order_delivery_date_to_order ( $order_id ) {
 			);
 			$cashbacks = get_posts($args);
 
+		
+
 			if(count($cashbacks) == 0){
 
-				$terms = get_terms(  'product_cat', 80 );
-
-				$formatedTerms = array();
-
-				$metaQuerys = array();
-				foreach($terms as $term){
-
-					$formatedTerms[] = $term->term_taxonomy_id;
-
-					$metaQuery = array(
-						'key'=>'groupe_de_produit',
-						'value'=> intval( $term->term_taxonomy_id ) ,
-						'compare'=>'LIKE'
-					);
-
-					$metaQuerys = $metaQuery;
-
-				}
+				$terms = get_terms( 'product_cat', $item_id );
+			
 
 				$args = array(
 					'post_type' => 'cashback',
-					'meta_query' => array(
-						'relation' => 'OR',
-						$metaQuerys
-					)
+					'orderby'          => 'ID',
+				'order'            => 'DESC',
 				);
 				$cashbacks = get_posts($args);
-				if(!is_admin()){
-
-					// echo "<pre>";
-					// var_dump($cashbacks);
-					// echo "</pre>";
-				}
 
 			}
 
 			if(count($cashbacks) != 0){
 
 				foreach($cashbacks as $cashback){
-					
-					$meta = get_post_meta($cashback->ID, '', true);
-					$amountCashback = 0;
-					if(isset( $meta['cashback'][0])){
-						$totalCashback[] = $meta['cashback'][0];
-						$amountCashback = $meta['cashback'][0];
-					}
 
-					//Total affiliation
+					$fields = get_fields($cashback->ID);
 
-					$line_subtotal  = $item->get_subtotal(); 
+					if(isset($fields['produit'])){
 
-						$ammount = ($line_subtotal * $amountCashback) / 100;
-
-						$totalAffiliation += $ammount;
-
-					$args = array(
-						'post_type' => 'campagne_affiliation',
-						'meta_query' => array(
-							'relation'=>'AND',
-							array(
-								'key' => 'cashback',
-								'value' => $cashback->ID,
-								'compare' => 'LIKE',
-							),
-							array(
-								'key'=>'date_start',
-								'value'=>date('Y-m-d',time()),
-								'compare'=>'<=',
-								'type'=>'DATE'
-							),
-							array(
-								'key'=>'date_end',
-								'value'=>date('Y-m-d',time()),
-								'compare'=>'>=',
-								'type'=>'DATE'
-							)
-						)
-					);
-					$campagnes = get_posts($args);
-					
-					if($campagnes){
-						
-						foreach($campagnes as $campagne){
-							$campagnesAffiliation[] = $campagne->ID;
+						$meta = get_post_meta($cashback->ID, '', true);
+						$amountCashback = 0;
+						if(isset( $meta['cashback'][0])){
+							$totalCashback[] = $meta['cashback'][0];
+							$amountCashback = $meta['cashback'][0];
 						}
+
+						//Total affiliation
+
+						$line_subtotal  = $item->get_subtotal(); 
+
+							$ammount = round(($line_subtotal * $amountCashback) / 100,2);
+
+							
+
+						$args = array(
+							'post_type' => 'campagne_affiliation',
+							'orderby'          => 'ID',
+							'order'            => 'DESC',
+							'meta_query' => array(
+								'relation'=>'AND',
+								array(
+									'key' => 'cashback',
+									'value' => $cashback->ID,
+									'compare' => 'LIKE',
+								),
+								array(
+									'key'=>'date_start',
+									'value'=>date('Y-m-d',time()),
+									'compare'=>'<=',
+									'type'=>'DATE'
+								),
+								array(
+									'key'=>'date_end',
+									'value'=>date('Y-m-d',time()),
+									'compare'=>'>=',
+									'type'=>'DATE'
+								)
+							)
+						);
+						$campagnes = get_posts($args);
+						
+						if($campagnes){
+							
+							foreach($campagnes as $campagne){
+								$campagnesAffiliation[] = $campagne->ID;
+								break;
+							}
+
+						}
+
+					}else{
+
+					foreach($terms as $term){
+
+
+						if(in_array($term->term_id, $fields['groupe_de_produit'])){
+						
+						$meta = get_post_meta($cashback->ID, '', true);
+						$amountCashback = 0;
+						if(isset( $meta['cashback'][0])){
+							$totalCashback[] = $meta['cashback'][0];
+							$amountCashback = $meta['cashback'][0];
+						}
+
+						//Total affiliation
+
+						$line_subtotal  = $item->get_subtotal(); 
+
+							$ammount = round(($line_subtotal * $amountCashback) / 100,2);
+
+							
+
+						$args = array(
+							'post_type' => 'campagne_affiliation',
+							'orderby'          => 'ID',
+							'order'            => 'DESC',
+							'meta_query' => array(
+								'relation'=>'AND',
+								array(
+									'key' => 'cashback',
+									'value' => $cashback->ID,
+									'compare' => 'LIKE',
+								),
+								array(
+									'key'=>'date_start',
+									'value'=>date('Y-m-d',time()),
+									'compare'=>'<=',
+									'type'=>'DATE'
+								),
+								array(
+									'key'=>'date_end',
+									'value'=>date('Y-m-d',time()),
+									'compare'=>'>=',
+									'type'=>'DATE'
+								)
+							)
+						);
+						$campagnes = get_posts($args);
+						
+						if($campagnes){
+							
+							foreach($campagnes as $campagne){
+								$campagnesAffiliation[] = $campagne->ID;
+								break;
+							}
+
+						}
+
 
 					}
 
 				}
+
+			}
+
+				$totalAffiliation += $ammount;
+			break;
+			}
 				
 			}
 

@@ -24,7 +24,11 @@
     width: 60%;
 }
 
-.colonne-5 {
-    width: 45%;
-    display: inline-block;
+.colonne-5.my-2 {
+    width: 100%;
+    padding: .5em;
+}
+
+button.button.btn-lg {
+    width: 100%;
 }
