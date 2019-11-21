@@ -6,6 +6,11 @@ Un plugin d'affiliation pour TRM
 
 Ce module à été developper pour la société TRM par Ayrton LECOUTRE de la SARL WEEBEDIA. Pour toutes questions vous pouvez envoyez un mail à contact@weebedia.com ou ayrtonpgt@gmail.com
 
+## Documentation
+https://docs.google.com/document/d/144mA-xPo5HNfj8VQRSZwPWY4hhTJqQK_uUdrGL0AlHI/edit?usp=sharing
+
+
+
 ### Prerequisites
 
 Vous devez disposez des licenses des extensions suivantes :
