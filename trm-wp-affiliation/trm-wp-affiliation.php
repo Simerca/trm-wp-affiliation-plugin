@@ -265,29 +265,16 @@ add_action('init', 'debugMyPlugin');
 function debugMyPlugin(){
 
 	if(isset($_GET['debug'])){
+	
+		//Start Debug
 
-		$item_id = 125951;
-
-	$args = array(
-		'post_type' => 'cashback',
-		'meta_query' => array(
-			array(
-			'key' => 'produit',
-			'value' => $item_id,
-			'compare' => 'LIKE',
-			)
-		)
-	);
-	$cashbacks = get_posts($args);
-	var_dump($cashbacks);
-	}
-}
-
-add_action( 'woocommerce_checkout_update_order_meta', 'add_order_delivery_date_to_order' , 10, 1);
-function add_order_delivery_date_to_order ( $order_id ) {
+		// Si Utilisateur Affilié
+		$_POST ['affiliate'] = '1';
 	if ( isset( $_POST ['affiliate'] ) &&  '' != $_POST ['affiliate'] ) {
+
 		add_post_meta( $order_id, '_affiliate',  sanitize_text_field( $_POST ['affiliate'] ) );
 
+		// Recuperation de l'utilisateur qui commande
 		$current_user = get_current_user_id();
 		if($current_user == 0){
 			$user_name = $_POST['billing']['email'];
@@ -304,17 +291,29 @@ function add_order_delivery_date_to_order ( $order_id ) {
 			}
 		}
 
+		// Definition du partenaire
 		$affiliateur = get_userdata($_POST['affiliate']);
 
 		//Obtain cashback for Products 
-		$order = wc_get_order($order_id);
+		$order = wc_get_order(304932);
 		$totalCashback = array();
 		$totalAffiliation = 0;
 		$campagnesAffiliation = array();
+
+		// Recuperation des items de la commande.
 		foreach ($order->get_items() as $item_key => $item ){
 
-			$item_id = $item->get_id();
+			$item_id = $item->get_product_id();
 
+			echo "<pre>";
+			var_dump($item_id);
+			echo "</pre>";
+
+			$terms = get_the_terms( $item_id, 'product_cat'  );
+
+			$brands = get_the_terms( $item_id, 'product_brand' );
+
+			//Args Produit
 			$args = array(
 				'post_type' => 'cashback',
 				'orderby'          => 'ID',
@@ -329,173 +328,318 @@ function add_order_delivery_date_to_order ( $order_id ) {
 			);
 			$cashbacks = get_posts($args);
 
-		
-
 			if(count($cashbacks) == 0){
 
-				$terms = get_terms( 'product_cat', $item_id );
-			
-
+				$itemBrand = false;
+				foreach($brands as $brand){
+					
+					$itemBrand = $brand->term_id;
+				}
+				
+				//Args Brands
 				$args = array(
 					'post_type' => 'cashback',
 					'orderby'          => 'ID',
-				'order'            => 'DESC',
+					'order'            => 'DESC',
+					'meta_query' => array(
+						array(
+						'key' => 'marque',
+						'value' => $itemBrand,
+						'compare' => 'LIKE',
+						)
+					)
 				);
 				$cashbacks = get_posts($args);
 
+				
+
 			}
 
-			if(count($cashbacks) != 0){
+			if(count($cashbacks) == 0){
+
+				$itemCat = false;
+				foreach($terms as $term){
+					$itemCat = $term->term_id;
+				}
+				
+				//Args Categorie
+				$args = array(
+					'post_type' => 'cashback',
+					'orderby'          => 'ID',
+					'order'            => 'DESC',
+					'meta_query' => array(
+						array(
+						'key' => 'groupe_de_produit',
+						'value' => $itemCat,
+						'compare' => 'LIKE',
+						)
+					)
+				);
+				$cashbacks = get_posts($args);
+
+
+			}
+
+			// Main Query
+
+			if($cashbacks){
 
 				foreach($cashbacks as $cashback){
 
-					$fields = get_fields($cashback->ID);
-
-					if(isset($fields['produit'])){
-
-						$meta = get_post_meta($cashback->ID, '', true);
-						$amountCashback = 0;
-						if(isset( $meta['cashback'][0])){
-							$totalCashback[] = $meta['cashback'][0];
-							$amountCashback = $meta['cashback'][0];
-						}
-
-						//Total affiliation
-
-						$line_subtotal  = $item->get_subtotal(); 
-
-							$ammount = round(($line_subtotal * $amountCashback) / 100,2);
-
-							
-
-						$args = array(
-							'post_type' => 'campagne_affiliation',
-							'orderby'          => 'ID',
-							'order'            => 'DESC',
-							'meta_query' => array(
-								'relation'=>'AND',
-								array(
-									'key' => 'cashback',
-									'value' => $cashback->ID,
-									'compare' => 'LIKE',
-								),
-								array(
-									'key'=>'date_start',
-									'value'=>date('Y-m-d',time()),
-									'compare'=>'<=',
-									'type'=>'DATE'
-								),
-								array(
-									'key'=>'date_end',
-									'value'=>date('Y-m-d',time()),
-									'compare'=>'>=',
-									'type'=>'DATE'
-								)
-							)
-						);
-						$campagnes = get_posts($args);
-						
-						if($campagnes){
-							
-							foreach($campagnes as $campagne){
-								$campagnesAffiliation[] = $campagne->ID;
-								break;
-							}
-
-						}
-
-					}else{
-
-					foreach($terms as $term){
-
-
-						if(in_array($term->term_id, $fields['groupe_de_produit'])){
-						
-						$meta = get_post_meta($cashback->ID, '', true);
-						$amountCashback = 0;
-						if(isset( $meta['cashback'][0])){
-							$totalCashback[] = $meta['cashback'][0];
-							$amountCashback = $meta['cashback'][0];
-						}
-
-						//Total affiliation
-
-						$line_subtotal  = $item->get_subtotal(); 
-
-							$ammount = round(($line_subtotal * $amountCashback) / 100,2);
-
-							
-
-						$args = array(
-							'post_type' => 'campagne_affiliation',
-							'orderby'          => 'ID',
-							'order'            => 'DESC',
-							'meta_query' => array(
-								'relation'=>'AND',
-								array(
-									'key' => 'cashback',
-									'value' => $cashback->ID,
-									'compare' => 'LIKE',
-								),
-								array(
-									'key'=>'date_start',
-									'value'=>date('Y-m-d',time()),
-									'compare'=>'<=',
-									'type'=>'DATE'
-								),
-								array(
-									'key'=>'date_end',
-									'value'=>date('Y-m-d',time()),
-									'compare'=>'>=',
-									'type'=>'DATE'
-								)
-							)
-						);
-						$campagnes = get_posts($args);
-						
-						if($campagnes){
-							
-							foreach($campagnes as $campagne){
-								$campagnesAffiliation[] = $campagne->ID;
-								break;
-							}
-
-						}
-
-
+					$meta = get_post_meta($cashback->ID, '', true);
+					$amountCashback = 0;
+					if(isset( $meta['cashback'][0])){
+						$totalCashback[] = $meta['cashback'][0];
+						$amountCashback = $meta['cashback'][0];
 					}
 
+					//Total affiliation
+					$line_subtotal  = $item->get_subtotal(); 
+						$ammount = round(($line_subtotal * $amountCashback) / 100,2);
+
+					$args = array(
+						'post_type' => 'campagne_affiliation',
+						'orderby'          => 'ID',
+						'order'            => 'DESC',
+						'meta_query' => array(
+							array(
+								'key' => 'cashback',
+								'value' => $cashback->ID,
+								'compare' => 'LIKE',
+							)
+						)
+					);
+					$campagnes = get_posts($args);
+
+					if($campagnes){
+						
+						foreach($campagnes as $campagne){
+							$meta = get_fields($campagne->ID, '', true);
+							echo "<pre>";
+							var_dump($meta);
+							echo "</pre>";
+							if($meta['utilisateur_affilie'] == "" || in_array($affiliateur->ID, $meta['utilisateur_affilie'])){	
+								$campagnesAffiliation[] = $campagne->ID;
+								$my_post = array(
+									'post_title'    => wp_strip_all_tags( date('d-m-Y H:i').' #'.$order_id ),
+									'post_content'  => '',
+									'post_status'   => 'publish',
+									'post_author'   => 1,
+									'post_type' => 'commande_affilie',
+									'meta_input'=>array(
+										'utilisateur'=>$current_user,
+										'campagne_daffiliation'=>$campagnesAffiliation,
+										'partenaire'=>$affiliateur->ID,
+										'commande'=>$order_id,
+										'montant_affiliation'=>$ammount
+									)
+								);
+								
+								// Insert the post into the database
+								wp_insert_post( $my_post );
+								break;
+							}
+						}
+
+					}
+			
 				}
 
 			}
 
-				$totalAffiliation += $ammount;
-			break;
-			}
-				
-			}
+			// Main Query
 
 		}
-		if(count($campagnesAffiliation) != 0){
-			// Create post object
-			$my_post = array(
-				'post_title'    => wp_strip_all_tags( date('d-m-Y H:i').' #'.$order_id ),
-				'post_content'  => '',
-				'post_status'   => 'publish',
-				'post_author'   => 1,
-				'post_type' => 'commande_affilie',
-				'meta_input'=>array(
-					'utilisateur'=>$current_user,
-					'campagne_daffiliation'=>$campagnesAffiliation,
-					'partenaire'=>$affiliateur->ID,
-					'commande'=>$order_id,
-					'montant_affiliation'=>$totalAffiliation
+
+	}
+
+		//Start Debug
+	
+	}
+}
+
+add_action( 'woocommerce_checkout_update_order_meta', 'add_order_delivery_date_to_order' , 10, 1);
+function add_order_delivery_date_to_order ( $order_id ) {
+
+	// Si Utilisateur Affilié
+	if ( isset( $_POST ['affiliate'] ) &&  '' != $_POST ['affiliate'] ) {
+
+		add_post_meta( $order_id, '_affiliate',  sanitize_text_field( $_POST ['affiliate'] ) );
+
+		// Recuperation de l'utilisateur qui commande
+		$current_user = get_current_user_id();
+		if($current_user == 0){
+			$user_name = $_POST['billing']['email'];
+			$user_email = $_POST['billing']['email'];
+			$user_id = username_exists( $user_name );
+			if ( !$user_id and email_exists($user_email) == false ) {
+				$random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
+				$user_id = wp_create_user( $user_name, $random_password, $user_email );
+				$current_user = $user_id;
+			} else {
+				$random_password = __('User already exists.  Password inherited.');
+				$billinguser = get_userdata($_POST['billing']['email']);
+				$current_user = $billinguser->ID;
+			}
+		}
+
+		// Definition du partenaire
+		$affiliateur = get_userdata($_POST['affiliate']);
+
+		//Obtain cashback for Products 
+		$order = wc_get_order($order_id);
+		$totalCashback = array();
+		$totalAffiliation = 0;
+		$campagnesAffiliation = array();
+
+		// Recuperation des items de la commande.
+		foreach ($order->get_items() as $item_key => $item ){
+
+			$item_id = $item->get_product_id();
+
+			echo "<pre>";
+			var_dump($item_id);
+			echo "</pre>";
+
+			$terms = get_the_terms( $item_id, 'product_cat'  );
+
+			$brands = get_the_terms( $item_id, 'product_brand' );
+
+			//Args Produit
+			$args = array(
+				'post_type' => 'cashback',
+				'orderby'          => 'ID',
+				'order'            => 'DESC',
+				'meta_query' => array(
+					array(
+					'key' => 'produit',
+					'value' => $item_id,
+					'compare' => 'LIKE',
+					)
 				)
 			);
+			$cashbacks = get_posts($args);
+
+			if(count($cashbacks) == 0){
+
+				$itemBrand = false;
+				foreach($brands as $brand){
+					
+					$itemBrand = $brand->term_id;
+				}
+				
+				//Args Brands
+				$args = array(
+					'post_type' => 'cashback',
+					'orderby'          => 'ID',
+					'order'            => 'DESC',
+					'meta_query' => array(
+						array(
+						'key' => 'marque',
+						'value' => $itemBrand,
+						'compare' => 'LIKE',
+						)
+					)
+				);
+				$cashbacks = get_posts($args);
+
+				
+
+			}
+
+			if(count($cashbacks) == 0){
+
+				$itemCat = false;
+				foreach($terms as $term){
+					$itemCat = $term->term_id;
+				}
+				
+				//Args Categorie
+				$args = array(
+					'post_type' => 'cashback',
+					'orderby'          => 'ID',
+					'order'            => 'DESC',
+					'meta_query' => array(
+						array(
+						'key' => 'groupe_de_produit',
+						'value' => $itemCat,
+						'compare' => 'LIKE',
+						)
+					)
+				);
+				$cashbacks = get_posts($args);
+
+
+			}
+
+			// Main Query
+
+			if($cashbacks){
+
+				foreach($cashbacks as $cashback){
+
+					$meta = get_post_meta($cashback->ID, '', true);
+					$amountCashback = 0;
+					if(isset( $meta['cashback'][0])){
+						$totalCashback[] = $meta['cashback'][0];
+						$amountCashback = $meta['cashback'][0];
+					}
+
+					//Total affiliation
+					$line_subtotal  = $item->get_subtotal(); 
+						$ammount = round(($line_subtotal * $amountCashback) / 100,2);
+
+					$args = array(
+						'post_type' => 'campagne_affiliation',
+						'orderby'          => 'ID',
+						'order'            => 'DESC',
+						'meta_query' => array(
+							array(
+								'key' => 'cashback',
+								'value' => $cashback->ID,
+								'compare' => 'LIKE',
+							)
+						)
+					);
+					$campagnes = get_posts($args);
+
+					if($campagnes){
+						
+						foreach($campagnes as $campagne){
+							$meta = get_fields($campagne->ID, '', true);
+							if($meta['utilisateur_affilie'] == 0 || in_array($affiliateur->ID, $meta['utilisateur_affilie'])){	
+								$campagnesAffiliation[] = $campagne->ID;
+								$my_post = array(
+									'post_title'    => wp_strip_all_tags( date('d-m-Y H:i').' #'.$order_id ),
+									'post_content'  => '',
+									'post_status'   => 'publish',
+									'post_author'   => 1,
+									'post_type' => 'commande_affilie',
+									'meta_input'=>array(
+										'utilisateur'=>$current_user,
+										'campagne_daffiliation'=>$campagnesAffiliation,
+										'partenaire'=>$affiliateur->ID,
+										'commande'=>$order_id,
+										'montant_affiliation'=>$ammount
+									)
+								);
+								
+								// Insert the post into the database
+								wp_insert_post( $my_post );
+								break;
+							}
+						}
+
+					}
 			
-			// Insert the post into the database
-			wp_insert_post( $my_post );
+				}
+
+			}
+
+			// Main Query
+
 		}
+
 	}
 }
 
